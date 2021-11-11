@@ -49,6 +49,7 @@ ramifications = list(reversed(ramifications))
 
 bin_tree = str()
 previous_indent = 0
+previous_center = 0
 
 for i in range(len(ramifications)):
     rams = 0
@@ -59,6 +60,11 @@ for i in range(len(ramifications)):
         
         print(DIVIDER * previous_indent, MAIN_SIGN * ramifications[i], DIVIDER * previous_indent, sep='', end='')
     else:
+        if previous_center == 0:
+            previous_center = ramifications[i - 1] - ramifications[i] // 2 * 2 - 2
+        else:
+            previous_center -= ramifications[i] // 2 * 2
+            
         previous_indent = previous_indent - ramifications[i] // 2
         
         for k in range(2 ** i * 2 + 1):
@@ -72,17 +78,19 @@ for i in range(len(ramifications)):
                 else:
                     rams_count = ramifications[i] * 2 ** i
                     indent_length = 2 ** (i - 1) * (ramifications[i - 1] - ramifications[i] - 1)
-                    indent = (WIDTH - rams_count - 2 * previous_indent - indent_length) # indent between both ramifications
+                    indent = (WIDTH - rams_count - 2 * previous_indent - indent_length - previous_center) # indent between both ramifications
                     
                     is_center = k == (2 ** (i + 1) + 1) // 2
                     if rams == 2 and not is_center:
                         rams = 0
                         indent //= (i - 2) * 2
+                        # indent += 1
                         
                         print(DIVIDER * indent, end='')
                     elif is_center:
+                        rams = 0
                         # print(DIVIDER * (ramifications[i - 1] - ramifications[i] - 1), end='')
-                        pass
+                        print(DIVIDER * previous_center, end='')
 
                     else:
                         print(DIVIDER * (ramifications[i - 1] - ramifications[i] - 1), end='')
