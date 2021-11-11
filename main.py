@@ -38,10 +38,10 @@ DIVIDER = '-'
 ramifications = list()
 
 for i in range(1, max_length + 1):
-    if i * 5 % 2 == 0:
-        ramifications.append(i * 5 * i+ 1)
+    if i * 3 % 2 == 0:
+        ramifications.append(i * 3 * i+ 1)
     else:
-        ramifications.append(i * 5 * i)
+        ramifications.append(i * 3 * i)
         
 WIDTH = sum(ramifications) + max_length + 1
     
@@ -51,6 +51,7 @@ bin_tree = str()
 previous_indent = 0
 
 for i in range(len(ramifications)):
+    rams = 0
     print()
     
     if previous_indent == 0:
@@ -63,11 +64,25 @@ for i in range(len(ramifications)):
         for k in range(2 ** i * 2 + 1):
             if k == 0 or k == 2 ** i * 2:
                 print(DIVIDER * previous_indent, end='')
+                
             else:
                 if (k + 1) % 2 == 0:
                     print(MAIN_SIGN * ramifications[i], end='')
+                    rams += 1
                 else:
-                    # if (k + 1) % 5 == 0:
-                        # print(DIVIDER * ((WIDTH - (2 ** i * ramifications[i] + (ramifications[i - 1] - ramifications[i] - 1) * (2 ** (i - 1)))) // (i + 1)), end='')
+                    rams_count = ramifications[i] * 2 ** i
+                    indent_length = 2 ** (i - 1) * (ramifications[i - 1] - ramifications[i] - 1)
+                    indent = (WIDTH - rams_count - 2 * previous_indent - indent_length) # indent between both ramifications
                     
-                    print(DIVIDER * (ramifications[i - 1] - ramifications[i] - 1), end='')
+                    is_center = k == (2 ** (i + 1) + 1) // 2
+                    if rams == 2 and not is_center:
+                        rams = 0
+                        indent //= (i - 2) * 2
+                        
+                        print(DIVIDER * indent, end='')
+                    elif is_center:
+                        # print(DIVIDER * (ramifications[i - 1] - ramifications[i] - 1), end='')
+                        pass
+
+                    else:
+                        print(DIVIDER * (ramifications[i - 1] - ramifications[i] - 1), end='')
