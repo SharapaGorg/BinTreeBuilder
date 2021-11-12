@@ -32,16 +32,16 @@ Painting binary tree
 """
 
 R_HEIGHT = 5
-MAIN_SIGN = '+'
-DIVIDER = '-'
+MAIN_SIGN = '*'
+DIVIDER = ' '
 
 ramifications = list()
 
 for i in range(1, max_length + 1):
-    if i * 3 % 2 == 0:
-        ramifications.append(i * 3 * i+ 1)
+    if i * 5 % 2 == 0:
+        ramifications.append(i ** 2 * 5 + 1)
     else:
-        ramifications.append(i * 3 * i)
+        ramifications.append(i ** 2 * 5)
         
 WIDTH = sum(ramifications) + max_length + 1
     
@@ -52,13 +52,13 @@ previous_indent = 0
 previous_center = 0
 
 for i in range(len(ramifications)):
-    rams = 0
-    print()
+    rams, foots = 0, str()
     
     if previous_indent == 0:
         previous_indent = (WIDTH - ramifications[i]) // 2
         
-        print(DIVIDER * previous_indent, MAIN_SIGN * ramifications[i], DIVIDER * previous_indent, sep='', end='')
+        print(DIVIDER * previous_indent, '0', MAIN_SIGN * (ramifications[i] - 2), '1', DIVIDER * previous_indent, sep='', end='')
+        foots += DIVIDER * previous_indent + MAIN_SIGN + DIVIDER * (ramifications[i] - 2) + MAIN_SIGN + DIVIDER * previous_indent
     else:
         if previous_center == 0:
             previous_center = ramifications[i - 1] - ramifications[i] // 2 * 2 - 2
@@ -70,10 +70,13 @@ for i in range(len(ramifications)):
         for k in range(2 ** i * 2 + 1):
             if k == 0 or k == 2 ** i * 2:
                 print(DIVIDER * previous_indent, end='')
+                foots += DIVIDER * previous_indent
                 
             else:
                 if (k + 1) % 2 == 0:
-                    print(MAIN_SIGN * ramifications[i], end='')
+                    print('0' + MAIN_SIGN * (ramifications[i] - 2) + '1', end='')
+                    foots += MAIN_SIGN + DIVIDER * (ramifications[i] - 2) + MAIN_SIGN
+                    
                     rams += 1
                 else:
                     rams_count = ramifications[i] * 2 ** i
@@ -84,13 +87,18 @@ for i in range(len(ramifications)):
                     if rams == 2 and not is_center:
                         rams = 0
                         indent //= (i - 2) * 2
-                        # indent += 1
                         
                         print(DIVIDER * indent, end='')
+                        foots += DIVIDER * indent
                     elif is_center:
                         rams = 0
-                        # print(DIVIDER * (ramifications[i - 1] - ramifications[i] - 1), end='')
                         print(DIVIDER * previous_center, end='')
+                        foots += DIVIDER * previous_center
 
                     else:
                         print(DIVIDER * (ramifications[i - 1] - ramifications[i] - 1), end='')
+                        foots += DIVIDER * (ramifications[i - 1] - ramifications[i] - 1)
+                        
+    foots = '\n' + foots
+    foots *= R_HEIGHT
+    print(foots)
