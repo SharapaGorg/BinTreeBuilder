@@ -1,5 +1,3 @@
-# from json import dumps
-
 BIN_DATA = 'data.txt'
 
 container, max_length = dict(), 0
@@ -25,8 +23,6 @@ with open(BIN_DATA, 'r') as read_stream:
     for row in rows:
         locate(container, *[i for i in row.rstrip('\n')])
     
-# print(dumps(container, sort_keys=True, indent=4))
-
 """
 Painting binary tree
 """
@@ -128,7 +124,7 @@ for i in range(len(ramifications)):
                 else:
                     rams_count = ramifications[i] * 2 ** i
                     indent_length = 2 ** (i - 1) * (ramifications[i - 1] - ramifications[i] - 1)
-                    indent = (WIDTH - rams_count - 2 * previous_indent - indent_length - previous_center) # indent between both ramifications
+                    indent = (WIDTH - rams_count - 2 * previous_indent - indent_length - previous_center)
                     
                     is_center = k == (2 ** (i + 1) + 1) // 2
                     if rams % 2 == 0 and not is_center:
