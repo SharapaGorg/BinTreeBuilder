@@ -80,8 +80,8 @@ for i in range(len(ramifications)):
         
         half1 = MAIN_SIGN if container.get('0') else DIVIDER
         half2 = MAIN_SIGN if container.get('1') else DIVIDER
-        half1 = MAIN_SIGN
-        half2 = MAIN_SIGN
+        # half1 = MAIN_SIGN
+        # half2 = MAIN_SIGN
         
         print(DIVIDER * previous_indent, 
               '┏' if container.get('0') else ' ', 
@@ -115,8 +115,8 @@ for i in range(len(ramifications)):
 
                     half1 = MAIN_SIGN if check_index(container, path1) else DIVIDER
                     half2 = MAIN_SIGN if check_index(container, path2) else DIVIDER
-                    half1 = MAIN_SIGN
-                    half2 = MAIN_SIGN
+                    # half1 = MAIN_SIGN
+                    # half2 = MAIN_SIGN
     
                     print(' ' if half1 == DIVIDER else '┏', 
                           half1 * ((ramifications[i] - 2) // 2), 
