@@ -32,9 +32,11 @@ Painting binary tree
 """
 
 R_HEIGHT = 5
-MAIN_SIGN = '*'
+MAIN_SIGN = '━'
 DIVIDER = ' '
 MIN_WIDTH = 5
+UP_MAIN_SIGN = '┃'
+CENTER_SIGN = '┻'
 
 ramifications = list()
 
@@ -60,17 +62,15 @@ def check_index(cont, indexes) -> bool:
             return False
         
     return True
-
-def find_path (power, ram):
-    result1 = str()
     
-    for i in range(1, power + 1):
-        if ram * 2 <= 2 ** i // 2:
-            result1 += '0'
-        else:
-            result1 += '1' 
-           
-    return result1[::-1][:len(result1) - 1] + '0', result1[::-1]
+def define_path(power, ram):
+    path1, path2 = 2 * ram, 2 * ram + 1
+    path1, path2 = bin(path1)[2:], bin(path2)[2:]
+    
+    path1 = path1.zfill(power)
+    path2 = path2.zfill(power)
+    
+    return path1, path2
             
 for i in range(len(ramifications)):
     rams, foots = 0, str()
@@ -80,18 +80,20 @@ for i in range(len(ramifications)):
         
         half1 = MAIN_SIGN if container.get('0') else DIVIDER
         half2 = MAIN_SIGN if container.get('1') else DIVIDER
+        half1 = MAIN_SIGN
+        half2 = MAIN_SIGN
         
         print(DIVIDER * previous_indent, 
-              '0' if container.get('0') else ' ', 
+              '┏' if container.get('0') else ' ', 
               half1 * ((ramifications[i] - 2) // 2), 
               MAIN_SIGN, 
               half2 * ((ramifications[i] - 2) // 2), 
-              '1' if container.get('1') else ' ', 
+              '┓' if container.get('1') else ' ', 
               DIVIDER * previous_indent, 
               sep='', 
               end='')
         
-        foots += DIVIDER * previous_indent + half1 + DIVIDER * (ramifications[i] - 2) + half2 + DIVIDER * previous_indent
+        foots += DIVIDER * previous_indent + (UP_MAIN_SIGN if half1 == MAIN_SIGN else DIVIDER) + DIVIDER * (ramifications[i] - 2) + (UP_MAIN_SIGN if half2 == MAIN_SIGN else DIVIDER) + DIVIDER * previous_indent
     else:
         if previous_center == 0:
             previous_center = ramifications[i - 1] - ramifications[i] // 2 * 2 - 2
@@ -109,23 +111,20 @@ for i in range(len(ramifications)):
                 if (k + 1) % 2 == 0:
                     rams += 1
                     
-                    path1, path2 = find_path(i + 1, rams)
-
-                    # problem in find_path func -> the same pass appears > 1 onces
-                    print(container, file = open('output.txt', 'a'))
-                    print(path1, path2, file = open('output.txt', 'a'))
-                    print(check_index(container, path1), check_index(container, path2), file = open('output.txt', 'a'))
+                    path1, path2 = define_path(i + 1, rams - 1)
 
                     half1 = MAIN_SIGN if check_index(container, path1) else DIVIDER
                     half2 = MAIN_SIGN if check_index(container, path2) else DIVIDER
-
-                    print(' ' if half1 == DIVIDER else '0', 
+                    half1 = MAIN_SIGN
+                    half2 = MAIN_SIGN
+    
+                    print(' ' if half1 == DIVIDER else '┏', 
                           half1 * ((ramifications[i] - 2) // 2), 
-                          ' ' if half1 == DIVIDER and half2 == DIVIDER else MAIN_SIGN, 
+                          ' ' if half1 == DIVIDER and half2 == DIVIDER else CENTER_SIGN, 
                           half2 * ((ramifications[i] - 2) // 2), 
-                          ' ' if half2 == DIVIDER else '1', end='', sep='')
+                          ' ' if half2 == DIVIDER else '┓', end='', sep='')
                     
-                    foots += half1 + DIVIDER * (ramifications[i] - 2) + half2
+                    foots += (UP_MAIN_SIGN if half1 == MAIN_SIGN else DIVIDER) + DIVIDER * (ramifications[i] - 2) + (UP_MAIN_SIGN if half2 == MAIN_SIGN else DIVIDER)
                 else:
                     rams_count = ramifications[i] * 2 ** i
                     indent_length = 2 ** (i - 1) * (ramifications[i - 1] - ramifications[i] - 1)
